@@ -14,32 +14,64 @@ import s from './Home.css';
 
 class Home extends React.Component {
   static propTypes = {
-    news: PropTypes.arrayOf(
+    data: PropTypes.arrayOf(
       PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        link: PropTypes.string.isRequired,
-        content: PropTypes.string,
+        id: PropTypes.number.isRequired,
+        first_name: PropTypes.string.isRequired,
+        last_name: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        gender: PropTypes.string.isRequired,
+        ip_address: PropTypes.string.isRequired,
       }),
     ).isRequired,
   };
+
+  constructor(props) {
+    super(props);
+
+    this.search = this.search.bind(this);
+    this.state = {
+      searchValue: '',
+    };
+  }
+
+  search(event) {
+    this.setState({ searchValue: event.target.value.toLowerCase() });
+  }
 
   render() {
     return (
       <div className={s.root}>
         <div className={s.container}>
-          <h1>React.js News</h1>
-          {this.props.news.map(item => (
-            <article key={item.link} className={s.newsItem}>
-              <h1 className={s.newsTitle}>
-                <a href={item.link}>{item.title}</a>
-              </h1>
-              <div
-                className={s.newsDesc}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </article>
-          ))}
+          <h1>React.js Test to join Upstack</h1>
+          <input
+            type="text"
+            placeholder="Search by First Name..."
+            onChange={this.search}
+          />
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.props.data
+                .filter(
+                  item =>
+                    item.first_name
+                      .toLowerCase()
+                      .indexOf(this.state.searchValue) > -1,
+                )
+                .map(item => (
+                  <tr key={item.id}>
+                    <td>{item.first_name}</td>
+                    <td>{item.email}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </div>
       </div>
     );
